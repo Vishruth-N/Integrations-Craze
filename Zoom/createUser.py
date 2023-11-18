@@ -16,17 +16,18 @@ def generate_oauth_token():
     }
     response = requests.post(url, headers=headers, data=payload)
     token = response.json().get('access_token', None)
+    scopes = response.json().get('scope', None)
     if not token:
         raise Exception("Failed to retrieve access token")
-    return token
+    return token, scopes
 
 # Generate the OAuth token
-oauth_token = generate_oauth_token()
+oauth_token, scopes = generate_oauth_token()
 
 # Print the OAuth token
 print(oauth_token)
-
-# Set the authorization header with the OAuth token
+print("scopes: ", scopes)
+# Set the authorization header with the OAuth tokenD
 headers = {
     'Authorization': f"Bearer {oauth_token}",
     'Content-Type': "application/json"
@@ -34,13 +35,20 @@ headers = {
 
 # Payload for creating a new user
 payload = {
-    'action': 'create',
-    "user_info": {
-        "email": "test@gmail.com",
-        "type": 1,
-        "first_name": "Justin",
-        "last_name": "Test"
-    }
+  "action": "create",
+  "user_info": {
+    "email": "jchill@example.com",
+    "first_name": "Jill",
+    "last_name": "Chill",
+    "display_name": "Jill Chill",
+    "password": "if42!LfH@",
+    "type": 1,
+    "feature": {
+      "zoom_phone": True,
+      "zoom_one_type": 16
+    },
+    "plan_united_type": "1"
+  }
 }
 
 # Make the API request to create a new user
